@@ -1,13 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, Image, Button, TouchableHighlight } from 'react-native';
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import * as ImageManipulator from 'expo-image-manipulator'
 import {Camera} from 'expo-camera'
+import Constants from 'expo-constants'
+import {vw} from 'react-native-expo-viewport-units'
 
 export default class App extends React.Component {
   state = {
     chosenImage: null,
+    takenImage: null,
     customCameraReady: false,
     cameraType: Camera.Constants.Type.back
   }
@@ -50,9 +53,7 @@ export default class App extends React.Component {
       return
     }
 
-    this.setState({
-      customCameraReady: true
-    })
+    this.setState({customCameraReady: true})
 
   }
 
@@ -70,22 +71,20 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text>
-          Photos
-        </Text>
+      <ScrollView style={styles.container}>
+        <Text>Photos</Text>
         <View style={{flexDirection: 'row'}}>
-          <Image source={require('./assets/1.jpg')} style={{height:200, width:200}} />
-          <Image source={require('./assets/2.jpg')} style={{height:200, width:200}} />
+          <Image source={require('./assets/1.jpg')} style={{height: vw(50), width: vw(50)}} />
+          <Image source={require('./assets/2.jpg')} style={{height: vw(50), width: vw(50)}} />
         </View>
         <Button title="Launch Camera Roll" onPress={() => this._launchCameraRollAsync()} />
-        <Button title="Launch Camera"onPress={() => this._launchCameraAsync()} />
+        <Button title="Launch Camera" onPress={() => this._launchCameraAsync()} />
         {this.state.customCameraReady && 
           <TouchableHighlight onPress={() => {this._flipCamera()}}>
             <Camera
               style={{
-                height: 300,
-                width: 300
+                height: vw(100),
+                width: vw(100)
               }}
               type={this.state.cameraType}
             />
@@ -109,7 +108,7 @@ export default class App extends React.Component {
             }}
           />
         }
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -118,7 +117,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: Constants.statusBarHeight,
   },
 });
